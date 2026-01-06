@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>My To-Do List</h1>
+    <div class="container">
+        <div class="left">
+            <h2 id="left_h2">Add New Task</h2>
+            <input type="text" name="item" id="newItem">
+            <button onclick="addNewItem()" id="inptBtn">Add Task</button>
+        </div>
+        <div class="right">
+            <h2 id="right_h2">Your To-Do List</h2>
+            <ul id="itemList"></ul>
+        </div>
+    </div>
+    <script src="To-Do_List.js"></script>
+</body>
+</html>
