@@ -1,0 +1,8 @@
+.clock{
+    display: flex;
+    font-size: 200px;
+    text-align: center;
+    justify-content: space-around;
+    padding: 215px;
+    color: #46010E;
+}
