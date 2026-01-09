@@ -1,0 +1,24 @@
+body{
+    background-color: #f5f7fa;
+}
+
+h1{
+    color: #111827;
+}
+
+h2{
+    color: #6b7280;
+}
+
+.deleteBtn{
+    color: #dc2626;
+}
+
+.editBtn{
+    color: #16a34a;
+}
+
+#addBtn{
+    background-color: #4f46e5;
+    color: #ffffff;
+}
