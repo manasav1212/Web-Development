@@ -15,12 +15,11 @@
     </div>
     <div class="filters" id="taskFilters">
         <h2>Task Filters</h2>
-        <select name="select" id="selectFilter">
+        <select name="select" id="selectFilter" onchange="handleFilterSelection(this.value)">
             <option value="none" selected>Choose Filter</option>
-            <option value="done" onselect="doneFilter()">Done</option>
-            <option value="pending" onselect="pendingFilter()">Pending</option>
+            <option value="done">Done</option>
+            <option value="pending">Pending</option>
         </select>
-        <button onclick="applyAllFilter()">All</button>
         <button onclick="clearFilter()">Clear</button>
     </div>
     <div class="List" id="taskList">

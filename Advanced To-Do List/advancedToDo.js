@@ -1,12 +1,13 @@
 
 function clearFilter()
 {
-
-}
-
-function applyAllFilter()
-{
-
+    document.getElementById("selectFilter").value = "none";
+    const parentDiv = document.getElementById("taskList");
+    const childDiv = parentDiv.querySelectorAll("div");
+    for(let child of childDiv)
+    {
+        child.style.display = "block";
+    }
 }
 
 function doneFilter()
@@ -15,9 +16,33 @@ function doneFilter()
     const childDiv = parentDiv.querySelectorAll("div");
     for(let child of childDiv)
     {
-        if(childDiv.querySelector("input[type='checkbox']").checked)
-            child.style.display = "block";
+        child.style.display = "block";
+        if(!(child.querySelector("input[type='checkbox']").checked))
+        {
+            child.style.display = "none";
+        }
+            
     }
+}
+
+function pendingFilter()
+{
+    const parentDiv = document.getElementById("taskList");
+    const childDiv = parentDiv.querySelectorAll("div");
+    for(let child of childDiv)
+    {
+        child.style.display = "block";
+        if(child.querySelector("input[type='checkbox']").checked)
+            child.style.display = "none";
+    }
+}
+
+function handleFilterSelection(value)
+{
+    if(value === "done")
+        doneFilter();
+    else if(value === "pending")
+        pendingFilter();
 }
 
 function taskCompleted(event)
@@ -47,6 +72,24 @@ function editTask(event)
 {
     const div = event.target.parentElement;
     const span = div.querySelector("span");
+
+    const editInput = document.createElement("input");
+    editInput.type = "text";
+    editInput.value = span.textContent;
+
+    div.replaceChild(editInput, span);
+    editInput.focus();
+    editInput.addEventListener("keydown", function(event){
+        if(event.key === "Enter")
+        {
+            span.textContent = editInput.value;
+            div.replaceChild(span, editInput);
+        }
+    });
+    editInput.addEventListener("blur",function(){
+        span.textContent = editInput.value;
+        div.replaceChild(span, editInput);
+    });
 }
 
 function deleteTask(event)
@@ -67,12 +110,12 @@ function getTask(task)
     taskDetails.textContent = task;
 
     const edit = document.createElement("button");
-    edit.textContent = "Edit";
+    edit.textContent = "✏️";
     edit.className = "editBtn";
     edit.addEventListener("click", editTask);
 
     const dlt = document.createElement("button");
-    dlt.textContent = "Delete";
+    dlt.textContent = "🗑️";
     dlt.className = "deleteBtn";
     dlt.addEventListener("click", deleteTask);
 
