@@ -62,7 +62,8 @@ app.put("/todo/done/:id", async (req, res) =>{
     try
     {
         const {id} = req.params; 
-        const result = await db.query('UPDATE "Task_List" SET status = true WHERE id= $1', [id]);
+        const {status} = req.body;
+        const result = await db.query('UPDATE "Task_List" SET status = $1 WHERE id= $2', [status, id]);
         res.json({message: "Marked as Done"});
     }
     catch(error)

@@ -85,9 +85,10 @@ function checkboxChange(event)
     }
 }
 
-function editTask(event)
+async function editTask(event)
 {
     const div = event.target.parentElement;
+    const id = div.dataset.id;
     const span = div.querySelector("span");
 
     const editInput = document.createElement("input");
@@ -99,24 +100,33 @@ function editTask(event)
     editInput.addEventListener("keydown", async function(event){
         if(event.key === "Enter")
         {
-            const result = await fetch(`${db_URL}/edit/${id}`,{
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body:  JSON.stringify({name:editInput.value})
-            });
-            span.textContent = editInput.value;
-            div.replaceChild(span, editInput);
+            if(editInput.value != "" && editInput.value != " ")
+            {
+                const result = await fetch(`${db_URL}/edit/${id}`,{
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body:  JSON.stringify({name:editInput.value})
+                });
+                const res = await result.json();
+                span.textContent = editInput.value;
+                div.replaceChild(span, editInput);
+            }
+            else
+            {
+                alert("Task Cannot be empty");
+                div.replaceChild(span, editInput)
+            }
         }
     });
-    editInput.addEventListener("blur",async function(){
-        const result = await fetch(`${db_URL}/edit/${id}`,{
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({name:editInput.value})
-        });
-        span.textContent = editInput.value;
-        div.replaceChild(span, editInput);
-    });
+    // editInput.addEventListener("blur",async function(){
+    //     const result = await fetch(`${db_URL}/edit/${id}`,{
+    //         method: "PUT",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({name:editInput.value})
+    //     });
+    //     span.textContent = editInput.value;
+    //     div.replaceChild(span, editInput);
+    // });
 }
 
 async function deleteTask(event)
@@ -138,7 +148,7 @@ function getTask(id, task, status = false)
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked - status;
+    checkbox.checked = status;
     checkbox.addEventListener("change", checkboxChange);
 
     const taskDetails = document.createElement("span");
