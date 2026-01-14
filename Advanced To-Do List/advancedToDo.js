@@ -1,3 +1,6 @@
+const db_URL = "http://localhost:8080/todo";
+
+window.onload = loadTasks;
 
 function clearFilter()
 {
@@ -45,14 +48,28 @@ function handleFilterSelection(value)
         pendingFilter();
 }
 
-function taskCompleted(event)
+async function taskCompleted(event)
 {
-    
+    const element = event.target;
+    const div = element.closest("div");
+    const id = div.dataset.id;
+    const result = await fetch(`${db_URL}/done/${id}`,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({status:true})
+    });
 }
 
-function taskPending(event)
+async function taskPending(event)
 {
-
+    const element = event.target;
+    const div = element.closest("div");
+    const id = div.dataset.id;
+    const result = await fetch(`${db_URL}/done/${id}`,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({status:false})
+    });
 }
 
 function checkboxChange(event)
@@ -79,31 +96,49 @@ function editTask(event)
 
     div.replaceChild(editInput, span);
     editInput.focus();
-    editInput.addEventListener("keydown", function(event){
+    editInput.addEventListener("keydown", async function(event){
         if(event.key === "Enter")
         {
+            const result = await fetch(`${db_URL}/edit/${id}`,{
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body:  JSON.stringify({name:editInput.value})
+            });
             span.textContent = editInput.value;
             div.replaceChild(span, editInput);
         }
     });
-    editInput.addEventListener("blur",function(){
+    editInput.addEventListener("blur",async function(){
+        const result = await fetch(`${db_URL}/edit/${id}`,{
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({name:editInput.value})
+        });
         span.textContent = editInput.value;
         div.replaceChild(span, editInput);
     });
 }
 
-function deleteTask(event)
+async function deleteTask(event)
 {
     const element = event.target;
-    element.closest("div").remove();
+    const div = element.closest("div");
+    const id = div.dataset.id;
+    await fetch(`${db_URL}/${id}`,{
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+    });
+    div.remove();
 }
 
-function getTask(task)
+function getTask(id, task, status = false)
 {
     let taskDiv = document.createElement("div");
+    taskDiv.dataset.id = id;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.checked - status;
     checkbox.addEventListener("change", checkboxChange);
 
     const taskDetails = document.createElement("span");
@@ -127,13 +162,30 @@ function getTask(task)
     return taskDiv;
 }
 
-function createNewTask(task)
+async function loadTasks()
+{
+    const result = await fetch(db_URL);
+    const Tasks = await result.json();
+    for(let task of Tasks)
+    {
+        const taskDiv = getTask(task.id, task.name, task.status);
+        document.getElementById("taskList").appendChild(taskDiv);
+    }
+}
+
+async function createNewTask(task)
 {
     if(task === "" || task === " ")
         alert("Invalid Task, Task cannot be empty!");
     else
     {
-        const taskDiv = getTask(task);
+        const res = await fetch(`${db_URL}/add`,{
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({name: task})
+        });
+        const result = await res.json();
+        const taskDiv = getTask(result.id, result.name);
         document.getElementById("taskList").appendChild(taskDiv);
     }
 }
