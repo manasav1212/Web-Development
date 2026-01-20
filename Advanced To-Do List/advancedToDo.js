@@ -58,6 +58,12 @@ async function taskCompleted(event)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({status:true})
     });
+    if(!result.ok)
+    {
+        const {error} = await result.json;
+        console.log(`Error: ${error}`);
+        alert("Error updating status..Refresh and Try again.");
+    }
 }
 
 async function taskPending(event)
@@ -70,6 +76,12 @@ async function taskPending(event)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({status:false})
     });
+    if(!result.ok)
+    {
+        const {error} = await result.json;
+        console.log(`Error: ${error}`);
+        alert("Error updating status..Refresh and Try again.");
+    }
 }
 
 function checkboxChange(event)
@@ -107,9 +119,18 @@ async function editTask(event)
                     headers: { "Content-Type": "application/json" },
                     body:  JSON.stringify({name:editInput.value})
                 });
-                const res = await result.json();
-                span.textContent = editInput.value;
-                div.replaceChild(span, editInput);
+                if(!result.ok)
+                {
+                    const {error} = await result.json;
+                    console.log(`Error: ${error}`);
+                    alert("Error editing task name..Try again.");
+                }
+                else
+                {
+                    const res = await result.json();
+                    span.textContent = editInput.value;
+                    div.replaceChild(span, editInput);
+                }
             }
             else
             {
@@ -118,15 +139,6 @@ async function editTask(event)
             }
         }
     });
-    // editInput.addEventListener("blur",async function(){
-    //     const result = await fetch(`${db_URL}/edit/${id}`,{
-    //         method: "PUT",
-    //         headers: { "Content-Type": "application/json" },
-    //         body: JSON.stringify({name:editInput.value})
-    //     });
-    //     span.textContent = editInput.value;
-    //     div.replaceChild(span, editInput);
-    // });
 }
 
 async function deleteTask(event)
@@ -134,11 +146,18 @@ async function deleteTask(event)
     const element = event.target;
     const div = element.closest("div");
     const id = div.dataset.id;
-    await fetch(`${db_URL}/${id}`,{
+    const result = await fetch(`${db_URL}/${id}`,{
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
     });
-    div.remove();
+    if(!result.ok)
+    {
+        const {error} = await result.json;
+        console.log(`Error: ${error}`);
+        alert("Error deleting the task..Try again.");
+    }
+    else
+        div.remove();
 }
 
 function getTask(id, task, status = false)
@@ -175,6 +194,13 @@ function getTask(id, task, status = false)
 async function loadTasks()
 {
     const result = await fetch(db_URL);
+    if(!result.ok)
+    {
+        const {error} = await result.json;
+        console.log(`Error: ${error}`);
+        alert("Error loading tasks, refresh the page.");
+        return;
+    }
     const Tasks = await result.json();
     for(let task of Tasks)
     {
@@ -194,9 +220,18 @@ async function createNewTask(task)
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({name: task})
         });
-        const result = await res.json();
-        const taskDiv = getTask(result.id, result.name);
-        document.getElementById("taskList").appendChild(taskDiv);
+        if(!res.ok)
+        {
+            const {error} = await result.json;
+            console.log(`Error: ${error}`);
+            alert("Error adding new task. Try again.");
+        }
+        else
+        {
+            const result = await res.json();
+            const taskDiv = getTask(result.id, result.name);
+            document.getElementById("taskList").appendChild(taskDiv);
+        }
     }
 }
 
