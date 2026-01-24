@@ -7,14 +7,14 @@ body{
     min-height: 80vh;
 }
 
-.Login_Class{
+.Login_Class, .Register_class{
     display: flex;
     flex-direction: column;
     padding: 20px;
     gap: 12px;
 }
 
-.Login_btn{
+.Login_btn, .Register_btn{
     width: 508px;
     height: 50px;
     background-color: #3273a8;
@@ -28,12 +28,12 @@ body{
     height: 50px;
 }
 
-.div{
+.div, .text{
     font-size: large;
     font-weight: bold;
 }
 
-.Register_div{
+.redirect{
     text-align: center;
     margin: 0;
 }
