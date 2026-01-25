@@ -3,9 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./CSS/dashboard.css">
     <title>Expense Tracker Dashboard</title>
 </head>
 <body>
-    
+    <div class="dashboard">
+        <aside class="sidePanel">
+            <h2>Dashboard</h2>
+            <a href="http://">Report</a><br>
+            <a href="http://">Expense by Category</a><br>
+            <a href="http://">Log out</a>
+        </aside>
+        <main class="mainContent">
+            <h1>Expense Tracker</h1>
+            <h2>Financial Status</h2>
+            <div class="FinancialDetails">
+                <div class="child">
+                    Monthly Income
+                    <div name="income" id="monthlyIncome">$8888</div>
+                </div>
+                <div class="child">
+                    Monthly Budget
+                    <div name="budget" id="monthlyBudget">$6000</div>
+                </div>
+                <div class="child">
+                    Monthly Expense
+                    <div name="expense" id="monthlyExpense">$5000</div>
+                </div>
+                <div class="child">
+                    Monthly Savings
+                    <div name="savings" id="monthlySavings">$3888</div>
+                </div>
+            </div>
+            <div class="chart" >
+                <h2>Expense chart</h2>
+            </div>
+        </main>
+    </div>
 </body>
 </html>
